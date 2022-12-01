@@ -1,16 +1,39 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.handbackground{
+  height: 500px;
+  background-image: url("./assets/images/bachground.jpg") ;
+background-size: contain;
+ 
+  background-repeat: no-repeat;
+  background-position: left;
+}
+.viber{
+  animation:.4s  ease-in-out vibrate ;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-img:hover {
-  opacity: 80%;
+@keyframes vibrate {
+  0.50%,
+  10%,
+  20%,
+  30%,
+  40%,
+  50% {
+    -webkit-transform: translate3d(0.5px, 0, 0);
+    transform: translate3d(0.5px, 0, 0);
+  }
+  5%,
+  15%,
+  25%,
+  35%,
+  45% {
+    -webkit-transform: translate3d(-0.5px, 0, 0);
+    transform: translate3d(-0.5px, 0, 0);
+  }
+  100% {
+    -webkit-transform: translate3d(0.5px, 0, 0);
+    transform: translate3d(0.5px, 0, 0);
+  }
 }

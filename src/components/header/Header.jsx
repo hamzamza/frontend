@@ -1,20 +1,10 @@
-import {
-  faArrowAltCircleRight,
-  faBed,
-  faCalendar,
-  faCalendarDays,
-  faCar,
-  faPerson,
-  faPlane,
-  faSearch,
-  faTaxi,
-} from "@fortawesome/free-solid-svg-icons";
+import * as freeSolidSvgIcons from "@fortawesome/free-solid-svg-icons";
 import { format } from "date-fns";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; //
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./header.css";
+
 import { DateRange } from "react-date-range";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
@@ -22,7 +12,6 @@ import { SearchContext } from "../../context/searchContext";
 //
 import { AuthContext } from "../../context/authContext";
 const NEW_SEARCH = "NEW_SEARCH";
-
 //
 function Header({ search }) {
   const [date, setDate] = useState([
@@ -42,6 +31,26 @@ function Header({ search }) {
     childrens: false,
     rooms: false,
   });
+  const [nav,setnav] = useState("absolute -bottom-7") // "fixed top-0"
+  useEffect(()=>{
+    window.onscroll = function () { 
+      console.log(window.pageYOffset)
+     
+      if (window.pageYOffset >= 550 ) {
+        setnav("fixed top-0 ")
+         // myNav.classList.add("nav-colored");
+          //myNav.classList.remove("nav-transparent");
+      } 
+      else {
+        if(nav != "absolute -bottom-5" )
+        setnav("absolute -bottom-5")
+          //myNav.classList.add("nav-transparent");
+         // myNav.classList.remove("nav-colored");
+      }
+  };
+
+
+  },[])
 
   const handelOption = (name, operation) => {
     if ((options[name] === 0) & (operation === "d")) {
@@ -90,100 +99,98 @@ function Header({ search }) {
   };
 
   return (
-    <div className="header">
+    <div className="w-full text-white bg-darkBlue handbackground relative ">
       <div
-        className={!search ? "headerContainer listMode " : "headerContainer"}
+        className={!search ? "container m-auto listMode " : "headerContainer"}
       >
-        <div className="headerList">
-          <div className="headerListItem active">
-            <FontAwesomeIcon className="header-logo" icon={faBed} />
-            <span>Stays</span>
-          </div>
-          <div className="headerListItem ">
-            <FontAwesomeIcon className="header-logo" icon={faPlane} />
-            <span>Flights</span>
-          </div>
-          <div className="headerListItem">
-            <FontAwesomeIcon className="header-logo" icon={faCar} />
-            <span>Car centeral</span>
-          </div>
-
-          <div className="headerListItem">
-            <FontAwesomeIcon className="header-logo" icon={faBed} />
-            <span>Attractions</span>
-          </div>
-
-          <div className="headerListItem">
-            <FontAwesomeIcon className="header-logo" icon={faTaxi} />
-            <span>Airroport taxis</span>
-          </div>
-        </div>
         {search && (
-          <>
-            <h1 className="headerTitle">
-              A lifetime of discounts? it's genius
-            </h1>
-            <p className="headerDesc">
-              Get rewarded for your travels unlick instant savings of 10% or
-              more with a free lambooking account
-            </p>
-            {!user && <button className="headerBtn">Sign in / Regester</button>}
-            <div className="headerSearch">
-              <div className="headerSearchItem">
-                <FontAwesomeIcon className="search-logo" icon={faBed} />
+          <div>
+            <div className="">
+              <h1 className="text-center text-5xl uppercase ">
+                A lifetime of discounts? it's genius
+              </h1>
+              <p className="text-lg mt-10 text-center">
+                Get rewarded for your travels unlick instant savings of 10% or
+                more with a free StrockBnB account
+              </p>
+            </div>
+
+           
+            <div className={"w-full z-10 "+nav}>
+
+            <div className=" grid text-blue-500 grid-cols-7 w-2/3 m-auto gap-1 bg-gray-100 shadow-md rounded-xl " >
+              <div className="  flex col-span-2 p-1">
+                <FontAwesomeIcon
+                  className="w-8 h-8 m-3"
+                  icon={freeSolidSvgIcons.faBed}
+                />
                 <input
                   onChange={(e) => {
                     setDestination(e.target.value);
                   }}
                   type="text"
-                  className="headerSearchInput"
-                  placeholder="Where are you going ? "
+                  className="bg-gray-50 border  border-blue-400  sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 font-bold dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                
+                  placeholder="Where are you going ? ...."
                 />
               </div>
-              <div className="headerSearchItem">
-                <FontAwesomeIcon icon={faCalendarDays} />
+              <div className="  col-span-2 " >
+               <div className="w-full h-full p-3 gap-1  flex justify-center items-center cursor-pointer" onClick={() => {
+                if (!opendate) setOpenDate( true);
+                  }}> <FontAwesomeIcon icon={freeSolidSvgIcons.faCalendarDays} />
                 <span
-                  className="headerSearchText"
-                  onClick={() => {
-                    setOpenDate((d) => !d);
-                  }}
+                  className=""
                 >
                   {format(date[0].startDate, "MM/dd/yyyy")} to{" "}
                   {format(date[0].endDate, "MM/dd/yyyy")}
-                </span>
+                </span></div>
                 {opendate && (
+                  <div className=" relative ">
+                    <FontAwesomeIcon  className=" font-bold  w-6  text-gray-600" icon={freeSolidSvgIcons.faXmark} onClick={()=>setOpenDate(false)}/>
+          <div>
+
                   <DateRange
-                    className="Date"
+                    className=""
                     editableDateInputs={true}
                     onChange={(item) => setDate([item.selection])}
                     moveRangeOnFirstSelection={false}
                     ranges={date}
-                  />
+                    />
+                    </div>
+                  </div>
                 )}
               </div>
-              <div className="headerSearchItem">
+              <div className="    col-span-2" 
+              onClick={() => {
+                setOpenOptions( true );
+              }}
+                  >
+                     <div className="w-full h-full p-3 gap-1  flex justify-center items-center cursor-pointer" >
+
+
+
                 <FontAwesomeIcon
-                  className="search-logo"
-                  onClick={() => {
-                    setOpenOptions((d) => !d);
-                  }}
-                  icon={faPerson}
-                />
+                  className=""
+                  icon={freeSolidSvgIcons.faPerson}
+                  />
                 <span
-                  className="headerSearchText"
-                  onClick={() => {
-                    setOpenOptions((d) => !d);
-                  }}
-                >
+                  className=""
+                  
+                  >
                   {`${options.adults} adults ${options.childrens} childrens ${options.rooms} rooms`}
                 </span>
+                  </div>
                 {openoptions && (
-                  <div className="options">
-                    <div className="optionitem">
-                      <span className="optiontext">Adults</span>
-                      <div className="counter">
+                  <div className=" relative">
+                    <div className=" absolute -top-3 -right-3 bg-slate-100 rounded-full p-1 shadow shadow-black">
+                  <FontAwesomeIcon  className=" font-bold  w-6  text-gray-600" icon={freeSolidSvgIcons.faXmark} onClick={()=>setOpenOptions(false)}/>
+
+                    </div>
+                    <div className="">
+                      <span className="">Adults</span>
+                      <div className="">
                         <button
-                          className="optionCounterbutton"
+                          className=""
                           onClick={() => {
                             handelOption("adults", "d");
                           }}
@@ -266,17 +273,19 @@ function Header({ search }) {
                   </div>
                 )}
               </div>
-              <div className="ssch">
-                <button className="searchBtn" onClick={handelSearch}>
+              <div className=" col-span-1">
+                
+                <div className="w-full h-full p-3 gap-1  flex justify-center items-center cursor-pointer" onClick={handelSearch}>
                   <FontAwesomeIcon
                     className="search-btn-logo"
-                    icon={faSearch}
+                    icon={freeSolidSvgIcons.faSearch}
                   />
                   <span className="searchBtnSpan">Search</span>
-                </button>
+                </div>
               </div>
             </div>
-          </>
+            </div>
+          </div>
         )}
       </div>
     </div>

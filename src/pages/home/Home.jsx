@@ -14,7 +14,7 @@ function Home() {
     <>
       <Navbar />
       <Header search={true} />
-      <div className="homeContainer">
+      <div className="homeContainer bg-slate-200">
         <h2 className="titleOf">Browse by city</h2>
         <Featured />
         <h2 className="titleOf">Browse by property type</h2>

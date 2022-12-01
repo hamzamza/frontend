@@ -1,9 +1,10 @@
 import "./propertyList.css";
 import useFetch from "../../hooks/useFetch";
+import { server } from "../../Backedn";
 
 const PropertyList = () => {
   const { data, loading, error } = useFetch(
-    "http://localhost:5000/api/hotel/countByType"
+    server+"/api/hotel/countByType"
   );
   return (
     <>

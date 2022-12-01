@@ -1,15 +1,4 @@
-import {
-  faArrowAltCircleRight,
-  faBed,
-  faCalendar,
-  faCalendarDays,
-  faCancel,
-  faCar,
-  faPerson,
-  faPlane,
-  faSearch,
-  faTaxi,
-} from "@fortawesome/free-solid-svg-icons";
+import * as freeSolidSvgIcons from "@fortawesome/free-solid-svg-icons";
 import { format } from "date-fns";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; //
@@ -26,6 +15,7 @@ import "./list.css";
 import { useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
 import { SearchContext } from "../../context/searchContext";
+import { server } from "../../Backedn";
 function List() {
   const location = useLocation();
   const NEW_SEARCH = "NEW_SEARCH";
@@ -59,7 +49,7 @@ function List() {
     rooms: false,
   });
   const { data, loading, error, reFetch } = useFetch(
-    `http://localhost:5000/api/hotel?city=${destination}&limit=10`
+    server+`/api/hotel?city=${destination}&limit=10`
   );
   const handelOption = (name, operation) => {
     if ((options[name] === 0) & (operation === "d")) {
@@ -91,7 +81,7 @@ function List() {
   const handelchange = () => {
     console.log("clicked");
     reFetch(
-      `http://localhost:5000/api/hotel?&limit=10&min=${min || 0}&max=${
+      server+`/api/hotel?&limit=10&min=${min || 0}&max=${
         max || 10000
       }`
     );
@@ -119,7 +109,7 @@ function List() {
 
             <div className="lsItem">
               <div className="lsSearchItem">
-                <FontAwesomeIcon className="search-logo" icon={faBed} />
+                <FontAwesomeIcon className="search-logo" icon={freeSolidSvgIcons.faBed} />
                 <input
                   onChange={(e) => {
                     setDestination(e.target.value);
@@ -134,7 +124,7 @@ function List() {
             <div className="lsItem">
               <div className="lsSearchItem">
                 <FontAwesomeIcon
-                  icon={faCalendarDays}
+                  icon={freeSolidSvgIcons.faCalendarDays}
                   className="search-logo"
                 />
                 <span
@@ -170,7 +160,7 @@ function List() {
                   onClick={() => {
                     setOpenOptions((d) => !d);
                   }}
-                  icon={faPerson}
+                  icon={freeSolidSvgIcons.faPerson}
                 />
                 <span
                   className="headerSearchText"
@@ -286,7 +276,7 @@ function List() {
             </div>
             <div className="ssch">
               <button className="searchBtn" onClick={handelchange}>
-                <FontAwesomeIcon className="search-btn-logo" icon={faSearch} />
+                <FontAwesomeIcon className="search-btn-logo" icon={freeSolidSvgIcons.faSearch} />
                 <span className="searchBtnSpan">Search</span>
               </button>
             </div>

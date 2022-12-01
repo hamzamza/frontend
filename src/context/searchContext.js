@@ -7,7 +7,6 @@ const INITIAL_STATE = {
         children: undefined,
         room: undefined
     },
-
 }
 const NEW_SEARCH = "NEW_SEARCH"
 const RESETE_STATE = "RESETE_STATE"

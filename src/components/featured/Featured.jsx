@@ -1,10 +1,10 @@
+import { server } from "../../Backedn";
 import useFetch from "../../hooks/useFetch";
 import "./featured.css";
 const Featured = () => {
   const { data, loading, error } = useFetch(
-    "http://localhost:5000/api/hotel/countByCity?cities=aoulouz,taroudant,agadir"
+  server+ "/api/hotel/countByCity?cities=aoulouz,taroudant,agadir"
   );
-
   return (
     <>
       {loading ? (
@@ -18,7 +18,6 @@ const Featured = () => {
               <h2> {data[0].number} properties</h2>
             </div>
           </div>
-
           <div className="featuredItem">
             <img src={data[1].imgsrc} alt="" className="featuredImg" />
 
