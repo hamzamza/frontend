@@ -27,6 +27,7 @@ module.exports = {
       'Segoe UI Symbol', 
       'Noto Color Emoji'
     ],
+    "nunito" :["Roboto Mono", "monospace"],
         'sans': [
       'Inter', 
       'ui-sans-serif', 

@@ -1,6 +1,6 @@
-import "./navbar.css";
+
 import { Link } from "react-router-dom";
-import logo from "./logo3.png";
+import logo from "../../assets/images/picwishnoname.png";
 import { useContext, useReducer } from "react";
 import { AuthContext } from "../../context/authContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,15 +8,15 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 function Navbar() {
   const { user } = useContext(AuthContext);
   return (
-    <div className=" bg-darkBlue ">
-      <div className="flex justify-between p-3 items-center  container m-auto">
+    <div className=" bg-blue-500 ">
+      <div className="flex justify-between p-3 items-center z-20 container m-auto">
         <Link to={"/"}>
           <span className="logo">
-            <img src={logo} alt="" width={"150px"} className=" rounded-lg " />
+            <img src={logo} alt="" className=" rounded-lg  h-20" />
           </span>
         </Link>
         {!user ? (
-          <div className="grid grid-cols-2 gap-1 ">
+          <div className="grid grid-cols-2 gap-1 z-20 ">
             <Link to={"/login"}>
               <div className="p-2 rounded-sm  text-white hover:text-darkBlue hover:bg-white px-3 text-center font-bold">
                 login

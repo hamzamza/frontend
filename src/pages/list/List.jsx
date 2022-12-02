@@ -101,7 +101,7 @@ function List() {
   return (
     <div>
       <Navbar />
-      <Header search={false} />
+    
       <div className="listContainer">
         <div className="listWrapper">
           <div className="listSearch">
