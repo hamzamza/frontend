@@ -4,30 +4,30 @@ import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; //
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Autocomplete, TextField } from '@mui/material';
+import React from 'react';
 
 import useFetch from "../../hooks/useFetch.js"
 import { DateRange } from "react-date-range";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { SearchContext } from "../../context/searchContext";
-//
 import { AuthContext } from "../../context/authContext";
-import Fitlers from "../filters/filters";
-import axios from "axios";
+import { Cities } from "../../assets/cities/cities.js";
 const NEW_SEARCH = "NEW_SEARCH";
 //
 function Header({ search ,cntrl }) {
-
+  const [opendate, setOpenDate] = useState(false);
+  const [openoptions, setOpenOptions] = useState(false);
+ 
     // auto compate section 
                               // get all morocan citys by git hub as ajson 
-                            const {data, loading, error, reFetch, setLoading } = useFetch("https://raw.githubusercontent.com/alaouy/sql-moroccan-cities/master/json/ville.json")
-                            if(!loading){
-                              const cities = data.map(item=>item.ville)
-                              console.log(cities);
-                            }
 
-  console.log(cntrl);
-  const {opendate,setOpenDate ,openoptions ,setOpenOptions} = cntrl
+               const [cities , setcities ] = useState(Cities.map(item=>item.ville))          
+                          
+                         
+                       
+
   const [date, setDate] = useState([
     {
       startDate: new Date(),
@@ -35,10 +35,7 @@ function Header({ search ,cntrl }) {
       key: "selection",
     },
   ]);
-  const closeall=()=>{
-    setOpenDate(false)
-    setOpenOptions(false)
-  }
+ 
   const { user } = useContext(AuthContext);
   const [destination, setDestination] = useState({});
  
@@ -51,7 +48,7 @@ function Header({ search ,cntrl }) {
   const [nav, setnav] = useState("absolute -bottom-7"); // "fixed top-0"
   useEffect(() => {
     window.onscroll = function () {
-      console.log(window.pageYOffset);
+     
 
       if (window.pageYOffset >= 604.25) {
         setnav("fixed top-0   ");
@@ -70,7 +67,6 @@ function Header({ search ,cntrl }) {
       setDanger((prev) => {
         return { ...prev, [name]: true };
       });
-
       setTimeout(() => {
         setDanger((prev) => {
           return { ...prev, [name]: false };
@@ -110,10 +106,17 @@ function Header({ search ,cntrl }) {
       navigate("/hotels", { state: { destination, date, options } });
     }
   };
-
-  return (<div className="">
-    <Fitlers/>
-  <div className="handbackground  sm:pt-20 w-full text-gray-700 bg-darkBlue relative">
+  const [isclikable,setIsClikable] = useState(false)
+  const closeall=()=>{
+    setOpenDate(false)
+    setOpenOptions(false)
+    setIsClikable(false)
+  }
+  return (<div className=" mb-6 ">
+  { isclikable &&   <div className="w-full h-full absolute z-40" onClick={closeall} >  </div>
+     }
+  
+  <div className="handbackground  sm:pt-10 w-full text-gray-700 bg-darkBlue relative">
     
     <div className="  lg:m-0 pb-20   font-nunito ">
       <div className="  m-auto  ">
@@ -121,18 +124,20 @@ function Header({ search ,cntrl }) {
         className={!search ? "container m-auto listMode " : "headerContainer"}
       >
         {search && (
-          <div className="w-full">
-            <div className=" flex items-center  glass w-fit m-auto flex-col">
-              <h1 className=" lg:text-5xl text-2xl uppercase  p-2 ">
-                Are you looking for a{" "}
-                <span className="text-yellow-500 font-bold">hotel</span> ??
+          <div className="w-full ">
+            <div className=" flex items-center container  rounded-3xl glass p-3 lg:p-20 lg:w-fit m-auto w-full flex-col">
+              <h1 className=" lg:text-5xl text-2xl text-center uppercase w-full p-2 font-bold">
+                Are you looking for a
+              <span className="text-blue-500">  hotel,Apartement,
+               Restorant</span>
+              ...??
               </h1>
-              <p className="text-lg mt-10 p-3 font-nunito ">
-              Hotels with History in Morocco · La Mamounia, Marrakech · Palais Amani, Fes · Dar Ahlam, Ouazarzate · Kasbah du Toubkal, Imlil ...
+              <p className="text-lg mt-10  text-center  font-bold font-nunito ">
+              Hotels with History in Morocco · La Mamounia, Marrakech · Palais Amani, Fes · Dar Ahlam, Ouazarzate · Kasbah du Toubkal, Imlit 
               </p>
-              <p className="text-lg w-full p-3 font-nunito ">
-               they are all available in this website
-               <span className="text-blue-300 text-lg"> Search down  </span>
+              <p className="text-lg w-full p-3 text-center font-bold font-nunito ">
+              don't waste your time searching  somewhere else ,
+               <span className="font-bold text-lg"> they are all over here  </span>
               </p>
             </div>
 
@@ -143,6 +148,18 @@ function Header({ search ,cntrl }) {
                     className="w-8 h-8 m-3"
                     icon={freeSolidSvgIcons.faBed}
               />
+               <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={cities}
+         className="w-full"
+          renderInput={(params) => <TextField {...params} label="where do you want ??" /> }
+         value={this}
+          onChange={(e,v) => {
+            setDestination(v)
+          }}
+        /> 
+      {/* :
                   <input
                     onChange={(e) => {
                       setDestination(e.target.value);
@@ -150,7 +167,7 @@ function Header({ search ,cntrl }) {
                     type="text"
                     className="bg-gray-50 border  border-blue-400  sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 font-bold dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Where are you going ? ...."
-                  />
+                  />}*/}
                 </div>
                 <div className="  col-span-2  hidden lg:block relative hover:bg-gray-200 hover:rounded-md">
                   <div
@@ -158,6 +175,8 @@ function Header({ search ,cntrl }) {
                     onClick={() => {
                       setOpenDate((old) => !old);
                       setOpenOptions(false)
+                     
+                      setIsClikable(true)
                     }}
                   >
                     {" "}
@@ -169,7 +188,6 @@ function Header({ search ,cntrl }) {
                   </div>
                   {opendate && (
                     <div className=" absolute top-30 w-full ">
-                      
                       <div className="relative m-auto w-fit ">
                         <div>
                           <DateRange
@@ -190,6 +208,7 @@ function Header({ search ,cntrl }) {
                     onClick={() => {
                       setOpenOptions((old) => !old);
                       setOpenDate(false)
+                      setIsClikable(true)
                     }}
                   >
                     <FontAwesomeIcon

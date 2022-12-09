@@ -16,6 +16,8 @@ import { useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
 import { SearchContext } from "../../context/searchContext";
 import { server } from "../../Backedn";
+import { Autocomplete, TextField } from "@mui/material";
+import { Cities } from "../../assets/cities/cities";
 function List() {
   const location = useLocation();
   const NEW_SEARCH = "NEW_SEARCH";
@@ -41,7 +43,9 @@ function List() {
   const [opendate, setOpenDate] = useState(false);
   const [openoptions, setOpenOptions] = useState(false);
   const [options, setOptions] = useState(
-    location.state ? location.state.options : null
+    location.state
+      ? location.state.options
+      : { adults: 0, childrens: 0, rooms: 0 }
   );
   const [danger, setDanger] = useState({
     adults: false,
@@ -49,7 +53,7 @@ function List() {
     rooms: false,
   });
   const { data, loading, error, reFetch } = useFetch(
-    server+`/api/hotel?city=${destination}&limit=10`
+    server + `/api/hotel?city=${destination}&limit=10`
   );
   const handelOption = (name, operation) => {
     if ((options[name] === 0) & (operation === "d")) {
@@ -81,9 +85,7 @@ function List() {
   const handelchange = () => {
     console.log("clicked");
     reFetch(
-      server+`/api/hotel?&limit=10&min=${min || 0}&max=${
-        max || 10000
-      }`
+      server + `/api/hotel?&limit=10&min=${min || 0}&max=${max || 10000}`
     );
     if (destination.length > 0) {
       dispatch({
@@ -98,194 +100,296 @@ function List() {
       // never run for a bus tran or girls when one leave anothter arrives !
     }
   };
+
+  const setaverage =(average)=>{
+    let maxP = 500 ; 
+let   minP = 0 
+    switch(average){
+      case "1": 
+      minP=10
+      maxP=100
+      break;
+      case "2":
+        minP=100
+        maxP=200
+    }
+setMin(minP)
+setMax(maxP)
+  }
+  const [cities, setcities] = useState(Cities.map((item) => item.ville));
+  const closeall = () => {
+    setOpenDate(false);
+    setOpenOptions(false);
+    setisallclose(false);
+  };
+  const [isallclose, setisallclose] = useState(false);
+
   return (
     <div>
-      <Navbar />
-    
-      <div className="listContainer">
-        <div className="listWrapper">
-          <div className="listSearch">
-            <h1 className="lsTitle">Search</h1>
+      {isallclose && (
+        <div className="w-full h-full absolute z-20" onClick={closeall}>
+          {" "}
+        </div>
+      )}
+      <div className="sticky top-0 left-0 z-20">
+        {" "}
+        <Navbar />
+      </div>
 
-            <div className="lsItem">
-              <div className="lsSearchItem">
-                <FontAwesomeIcon className="search-logo" icon={freeSolidSvgIcons.faBed} />
-                <input
-                  onChange={(e) => {
-                    setDestination(e.target.value);
+      <div className="grid grid-cols-5 gap-4  bgzlij min-h-screen p-20 z-40 ">
+        <div className="col-span-1 h-fit glass p-3 sticky z-30 top-24 text-gray-500 ">
+          <div className=" grid-cols-2 grid lg:grid-cols-1 ">
+            <h1 className=" text-xl font-bold font-nunito text-gray-500 pl-10">
+              Search
+            </h1>
+
+            <div className="w-full">
+              <div className="  flex gap-2 items-center  p-1   hover:bg-gray-200 rounded-xl">
+                <FontAwesomeIcon
+                  className=" text-blue-600 p-3 rounded-full  "
+                  icon={freeSolidSvgIcons.faBed}
+                />
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={cities}
+                  className="w-full"
+                  renderInput={(params) => (
+                    <TextField {...params} label="where do you want ??" />
+                  )}
+                  value={this}
+                  onChange={(e, v) => {
+                    setDestination(v);
                   }}
-                  type="text"
-                  value={destination || " "}
-                  className="headerSearchInput"
-                  placeholder="Where are you going ? "
                 />
               </div>
             </div>
-            <div className="lsItem">
-              <div className="lsSearchItem">
-                <FontAwesomeIcon
-                  icon={freeSolidSvgIcons.faCalendarDays}
-                  className="search-logo"
-                />
-                <span
-                  className="headerSearchText"
+            <div className=" p-2 ">
+              <div className="  col-span-2 gap-2 items-center lg:flex relative  z-30">
+                <div
+                  className=" p-3  hover:bg-slate-300 bg-gray-100 rounded items-center cursor-pointer"
                   onClick={() => {
-                    setOpenDate((d) => !d);
+                    setOpenDate((old) => !old);
+                    setOpenOptions(false);
+                    setisallclose(true);
                   }}
                 >
-                  {location.state
-                    ? format(date[0].startDate, "MM/dd/yyyy") +
-                      " to " +
-                      format(date[0].endDate, "MM/dd/yyyy")
-                    : format(new Date(), "MM/dd/yyyy") +
-                      "to " +
-                      format(new Date(), "MM/dd/yyyy")}
-                </span>
+                  {" "}
+                  <FontAwesomeIcon
+                    className="text-blue-600"
+                    icon={freeSolidSvgIcons.faCalendarDays}
+                  />
+                </div>
+                <div className="w-full p-1">
+                  <div
+                    onClick={() => {
+                      setOpenDate((old) => !old);
+                      setOpenOptions(false);
+                      setisallclose(true);
+                    }}
+                    className=" p-2 bg-white rounded-lg  text-center font-bold text-gray-700 "
+                  >
+                    {format(date[0].startDate, "dd- MM- yyyy")}
+                  </div>
+                  <div className="text-center font-bold ">
+                    <FontAwesomeIcon
+                      className=""
+                      icon={freeSolidSvgIcons.faArrowDown}
+                    />
+                  </div>
+                  <div
+                    onClick={() => {
+                      setOpenDate((old) => !old);
+                      setOpenOptions(false);
+                      setisallclose(true);
+                    }}
+                    className=" p-2 bg-white rounded-lg  text-center font-bold text-gray-700 "
+                  >
+                    {format(date[0].endDate, "dd- MM- yyyy")}
+                  </div>
+                </div>
 
                 {opendate && (
-                  <DateRange
-                    className="newDate"
-                    editableDateInputs={true}
-                    onChange={(item) => setDate([item.selection])}
-                    moveRangeOnFirstSelection={false}
-                    ranges={date}
-                  />
+                  <div className=" absolute top-20 -left-8 w-full ">
+                    <div className="relative m-auto w-fit ">
+                     
+                        <DateRange
+                          className="z-20 "
+                          editableDateInputs={true}
+                          onChange={(item) => setDate([item.selection])}
+                          moveRangeOnFirstSelection={false}
+                          ranges={date}
+                        />
+                   
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
-            <div className="lsItem">
-              <div className="lsSearchItem">
+            <div className=" p-3 mt-2 cursor-pointer  bg-white rounded-lg ">
+              <div className="flex justify-around relative items-center gap-3">
                 <FontAwesomeIcon
-                  className="search-logo"
+                  className=""
                   onClick={() => {
                     setOpenOptions((d) => !d);
                   }}
                   icon={freeSolidSvgIcons.faPerson}
                 />
                 <span
-                  className="headerSearchText"
+                  className=""
                   onClick={() => {
                     setOpenOptions((d) => !d);
+                    setisallclose(true);
                   }}
                 >
-                  {`${options ? options.adults : 0} adults ${
-                    options ? options.childrens : 0
-                  } childrens ${options ? options.rooms : 0} rooms `}
+                  {`${options.adults +'  '} adults ${options.childrens} childrens ${options.rooms} rooms `}
                 </span>
                 {openoptions && (
-                  <div className="options">
-                    <div className="optionitem">
-                      <span className="optiontext">Adults</span>
-                      <div className="counter">
-                        <button
-                          className="optionCounterbutton"
-                          onClick={() => {
-                            handelOption("adults", "d");
-                          }}
-                        >
-                          -
-                        </button>
-                        <span
-                          className={`optionCounterNumber ${
-                            danger.adults ? "active" : " "
-                          }`}
-                        >
-                          {options ? options.adults : 1}
-                        </span>
-                        <button
-                          className="optionCounterbutton"
-                          onClick={() => {
-                            handelOption("adults", "i");
-                          }}
-                        >
-                          +
-                        </button>
+                  <div className="absolute w-full top-10">
+                    <div className="  m-auto bg-white shadow-lg w-5/6 rounded-md ">
+                      <div className="p-4   flex justify-between">
+                        <span className="">Adults</span>
+                        <div className="grid grid-cols-3 items-center">
+                          <button
+                            className=" optionCounterbutton"
+                            onClick={() => {
+                              handelOption("adults", "d");
+                            }}
+                          >
+                            -
+                          </button>
+                          <span
+                            className={`optionCounterNumber ${
+                              danger.adults ? "active" : " "
+                            }`}
+                          >
+                            {options.adults}
+                          </span>
+                          <button
+                            className="optionCounterbutton"
+                            onClick={() => {
+                              handelOption("adults", "i");
+                            }}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <div className="optionitem">
-                      <span className="optiontext">Children</span>
-                      <div className="counter">
-                        <button
-                          className="optionCounterbutton"
-                          onClick={() => {
-                            handelOption("childrens", "d");
-                          }}
-                        >
-                          -
-                        </button>
-                        <span
-                          className={`optionCounterNumber ${
-                            danger.childrens ? "active" : " "
-                          }`}
-                        >
-                          {options ? options.childrens : 1}
-                        </span>
-                        <button
-                          className="optionCounterbutton"
-                          onClick={() => {
-                            handelOption("childrens", "i");
-                          }}
-                        >
-                          +
-                        </button>
+                      <div className="p-4  flex justify-between">
+                        <span className="optiontext">Children</span>
+                        <div className="grid  grid-cols-3 items-center">
+                          <button
+                            className="optionCounterbutton"
+                            onClick={() => {
+                              handelOption("childrens", "d");
+                            }}
+                          >
+                            -
+                          </button>
+                          <span
+                            className={`optionCounterNumber ${
+                              danger.childrens ? "active" : " "
+                            }`}
+                          >
+                            {options.childrens}
+                          </span>
+                          <button
+                            className="optionCounterbutton"
+                            onClick={() => {
+                              handelOption("childrens", "i");
+                            }}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <div className="optionitem">
-                      <span className="optiontext">rooms</span>
-                      <div className="counter">
-                        <button
-                          className="optionCounterbutton"
-                          onClick={() => {
-                            handelOption("rooms", "d");
-                          }}
-                        >
-                          -
-                        </button>
-                        <span
-                          className={`optionCounterNumber ${
-                            danger.rooms ? "active" : " "
-                          }`}
-                        >
-                          {options ? options.rooms : 1}
-                        </span>
-                        <button
-                          className="optionCounterbutton"
-                          onClick={() => {
-                            handelOption("rooms", "i");
-                          }}
-                        >
-                          +
-                        </button>
+                      <div className="p-4  flex justify-between">
+                        <span className="optiontext">rooms</span>
+                        <div className="grid  grid-cols-3 items-center">
+                          <button
+                            className="optionCounterbutton"
+                            onClick={() => {
+                              handelOption("rooms", "d");
+                            }}
+                          >
+                            -
+                          </button>
+                          <span
+                            className={`optionCounterNumber ${
+                              danger.rooms ? "active" : " "
+                            }`}
+                          >
+                            {options.rooms}
+                          </span>
+                          <button
+                            className="optionCounterbutton"
+                            onClick={() => {
+                              handelOption("rooms", "i");
+                            }}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 )}
               </div>
             </div>
-            <div className="lsItem">
-              <div className="input">
-                <h4>Min price per night </h4>
-                <input type="text" onChange={(e) => setMin(e.target.value)} />
-              </div>
-            </div>
-            <div className="lsItem">
-              <div className="input">
-                <h4>Max price per night </h4>
+           
+            <div className="bg-white rounded-lg p-2  mt-2">
+             
+               
+<h3 class="mb-3  mt-1 font-semibold   ">Votre budget (par nuit)</h3>
+<ul class="w-full  text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200"  onChange={(e) => setaverage(e.target.value)}>
+    <li class="w-full rounded-t-lg border-b border-gray-200 " >
+        <div class="flex items-center pl-3">
+            <input id="list-radio-license" type="radio" value="1" name="list-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 " />
+            <label for="list-radio-license" class="py-3 ml-2 w-full text-sm font-medium text-gray-900 ">Driver License </label>
+        </div>
+    </li>
+    <li class="w-full rounded-t-lg border-b border-gray-200 ">
+        <div class="flex items-center pl-3">
+            <input id="list-radio-id" type="radio" value="2" name="list-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 "/>
+            <label for="list-radio-id" class="py-3 ml-2 w-full text-sm font-medium text-gray-900 ">State ID</label>
+        </div>
+    </li>
+    <li class="w-full rounded-t-lg border-b border-gray-200 ">
+        <div class="flex items-center pl-3">
+            <input id="list-radio-millitary" type="radio" value="3" name="list-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 "/>
+            <label for="list-radio-millitary" class="py-3 ml-2 w-full text-sm font-medium text-gray-900 ">US Millitary</label>
+        </div>
+    </li>
+    <li class="w-full rounded-t-lg border-b border-gray-200 ">
+        <div class="flex items-center pl-3 ">
+            <input id="list-radio-passport" type="radio" value="4" name="list-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 "/>
+            <label for="list-radio-passport" class="py-3 ml-2 w-full text-sm font-medium text-gray-900 ">US Passport</label>
+        </div>
+    </li>
+</ul>
+
                 <input type="text" onChange={(e) => setMax(e.target.value)} />
-              </div>
+             
             </div>
             <div className="ssch">
               <button className="searchBtn" onClick={handelchange}>
-                <FontAwesomeIcon className="search-btn-logo" icon={freeSolidSvgIcons.faSearch} />
+                <FontAwesomeIcon
+                  className="search-btn-logo"
+                  icon={freeSolidSvgIcons.faSearch}
+                />
                 <span className="searchBtnSpan">Search</span>
               </button>
             </div>
           </div>
-          <div className="listResult">
-            {destination}
-            {data.length > 0
-              ? data.map((item) => <SearchItem item={item} key={item._id} />)
-              : "no info for  " + destination}
+        </div>
+        <div className="   col-span-4 h-fit ">
+          <div className=" glass p-10 ">
+            <div className="  ">
+             <div className="text-gray-400 mb-5 first-letter:uppercase font-extrabold font-mono text-center w-full text-2xl"> {destination}</div>
+              {data.length > 0
+                ? data.map((item) => <SearchItem item={item} key={item._id} />)
+                : "no info for  " + destination}
+            </div>
           </div>
         </div>
       </div>

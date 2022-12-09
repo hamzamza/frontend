@@ -7,25 +7,37 @@
 .optionCounterbutton{
   @apply bg-slate-400 p-2 rounded-full w-10 text-white col-span-1;
 }
+.mytransition{
+  transition: .3s;
+}
 .glass{
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
-  padding: 1rem;
-  background: linear-gradient( to left ,rgba(83, 83, 83, 0.24),rgba(255, 255, 255, 0.74));
+  
+
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  background: linear-gradient( to left ,rgba(253, 253, 253, 0.658),rgba(255, 255, 255, 0.274));
 }
 .optionCounterNumber{
   @apply font-bold font-body col-span-1 text-center 
 }
-
+.flow{
+  position: relative;
+}
+.flow:after{
+  position: absolute ;
+content: "";
+z-index: 20;
+width: 100%;
+height: 1rem;
+top: 100%;
+left:0; 
+right: 0;
+background: linear-gradient(180deg, #eae3d9 0%, #eae3d900 100%);
+}
 .handbackground{ 
-
   height: 500px;
-
   background-image: url("./assets/images/5540930.jpg") ;
-background-size: cover;
 
-  background-repeat: no-repeat;
-  background-position: left;
+
 }
 .viber{
   animation:.4s  ease-in-out vibrate ;

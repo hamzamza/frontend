@@ -1,5 +1,8 @@
+
+import github from './assets/images/github.svg'
 import { useState } from "react";
 import { useEffect } from "react";
+
 import {
   BrowserRouter as Router,
   Route,
@@ -11,6 +14,8 @@ import Hotel from "./pages/hotel/Hotel";
 import List from "./pages/list/List";
 import Login from "./pages/login/Login";
 import Register from "./pages/register";
+import { Icon } from '@mui/material';
+import About from './components/About';
 const Notfound = () => {
   return (<div>
     <div style={{ display: "flex", justifyContent: "center" }} >
@@ -24,9 +29,13 @@ const Notfound = () => {
 function App() {
  
 return (
-    <Router>
+   <div className="relative">
+    <a target={"_blank"} href="https://github.com/hamzamza/frontend" className=" fixed hidden md:block   top-10 right-10  z-50"> <img src={github } className="w-20 bg-gray-500  shadow-lg shadow-black  rounded-full p-3 " /> </a>
+     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+
         <Route path="/hotels" element={<List />} />
         <Route path="/hotel/select/:id" element={<Hotel />} />
         <Route path="/login" element={<Login />} />
@@ -34,6 +43,7 @@ return (
         <Route path="*" element={<Notfound />} />
       </Routes>
     </Router>
+   </div>
   )
   /*
                    this code generating the location of your client but the problem is in the permission i can't handel it 
